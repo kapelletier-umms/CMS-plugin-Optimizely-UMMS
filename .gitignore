@@ -74,3 +74,4 @@ UpgradeLog*.htm
 .vs
 
 # Custom
+SiteImprove.Optimizely.Plugin/modules/_protected/SiteImprove.Optimizely.Plugin/SiteImprove.Optimizely.Plugin.zip
