@@ -30,7 +30,7 @@
 
                 if (context.capabilities.isPage) {
                     request
-                        .get('/episerver/SiteImprove.Optimizely.Plugin/siteimprove/pageUrl', {
+                        .get(window.epi.routes.getActionPath({ moduleArea: "SiteImprove.Optimizely.Plugin", controller: "Siteimprove", action: "pageUrl" }), {
                             query: { contentId: context.id, locale: context.language },
                             handleAs: 'json',
                         })
@@ -44,7 +44,7 @@
         },
         pushHtml: function (html, pageUrl) {
             request
-                .get('/episerver/SiteImprove.Optimizely.Plugin/siteimprove/token', { handleAs: 'json' })
+                .get(window.epi.routes.getActionPath({ moduleArea: "SiteImprove.Optimizely.Plugin", controller: "Siteimprove", action: "token" }), { handleAs: 'json' })
                 .then(function (token) {
                     var si = window._si || [];
                     si.push([

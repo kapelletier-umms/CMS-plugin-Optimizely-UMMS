@@ -33,7 +33,7 @@
             initialize: function () {
                 this.inherited(arguments);
 
-                request.get('/episerver/SiteImprove.Optimizely.Plugin/siteimprove/IsAuthorized')
+                request.get(window.epi.routes.getActionPath({ moduleArea: "SiteImprove.Optimizely.Plugin", controller: "Siteimprove", action: "IsAuthorized" }))
                     .then(function (response) { //assume success
                         topic.subscribe('/epi/shell/context/current', this.contextCurrent.bind(this));
                         topic.subscribe('/epi/shell/context/changed', this.contextChange.bind(this));
@@ -114,7 +114,7 @@
              * Returns Promise.
              */
             getPageUrl: function (contentId, locale) {
-                return request.get('/episerver/SiteImprove.Optimizely.Plugin/siteimprove/pageUrl',
+                return request.get(window.epi.routes.getActionPath({ moduleArea: "SiteImprove.Optimizely.Plugin", controller: "Siteimprove", action: "pageUrl" }),
                     {
                         query: {
                             contentId: contentId,
@@ -140,7 +140,7 @@
                         }
                     ]);
                 } else {
-                    request.get('/episerver/SiteImprove.Optimizely.Plugin/siteimprove/token', { handleAs: 'json' })
+                    request.get(window.epi.routes.getActionPath({ moduleArea: "SiteImprove.Optimizely.Plugin", controller: "Siteimprove", action: "token" }), { handleAs: 'json' })
                         .then(function (response) {
                             // relay to SiteImprove
                             si.push([

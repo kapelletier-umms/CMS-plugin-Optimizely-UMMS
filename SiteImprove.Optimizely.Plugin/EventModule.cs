@@ -17,7 +17,7 @@ namespace SiteImprove.Optimizely.Plugin
 
         public void Initialize(InitializationEngine context)
         {
-            this._settingsRepository = ServiceLocator.Current.GetInstance<ISettingsRepository>();
+            _settingsRepository = ServiceLocator.Current.GetInstance<ISettingsRepository>();
             _siteimproveHelper = ServiceLocator.Current.GetInstance<ISiteimproveHelper>();
 
             var contentEvents = ServiceLocator.Current.GetInstance<IContentEvents>();
