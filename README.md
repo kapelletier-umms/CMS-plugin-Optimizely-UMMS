@@ -1,20 +1,34 @@
 # CMS-plugin-Optimizely
 
+The Siteimprove CMS Add-On bridges the gap between the Optimizely content management system (CMS) and the Siteimprove Intelligence Platform. With this seamless integration, your team can fix errors and optimize content directly within the Optimizely editing environment. Once the detected issues have been assessed, you can re-check the relevant page in real-time and assess if further actions are needed.
 
-When changing in files in ClientResources then update the version number foldername of the folder ClientResources is in. 
-for example from 1.0.1 to 1.0.2 and in module.config update clientResourceRelativePath to the same new number
+The Siteimprove CMS Add-On provides insights into*:
+* Misspellings and broken links
+* Readability levels
+* Accessibility issues (A, AA, AAA conformance level)
+* High-priority policies
+* SEO: technical, content, UX, and mobile 
+* Page visits and page views
+* Feedback rating and comments
 
-when any change have been made update the package number in the project file
-from for example <Version>4.0.7</Version> to <Version>4.0.8</Version>
+*Data shown in the Siteimprove CMS Add-On depends on the Siteimprove services you are subscribed to.
 
+About Siteimprove:
 
-updating module name:
-change in Constants.SiteImproveModuleName and in all js files
+Siteimprove's cloud-based software provides eye-opening insights that empower you and your team to understand, prioritize, and optimize the performance of your website and beyond. With the world’s most comprehensive Digital Presence Optimization (DPO) solution, we provide the clarity and direction needed to run a high-performance website. More than 7,000 organizations around the world trust the Siteimprove Intelligence Platform (SIP) to perfect their digital presence. Learn why at siteimprove.com.
 
+### Installation
+First install the nuget package SiteImprove.Optimizely.Plugin from the Optimizely nuget feed
+Second add the following line to the ConfigureServices method in Startup class
+```
+services.AddSiteImprove();
+```
+Then the tool will be installed and show up on the right in Edit mode and in Admin mode there will be a Siteimprove tool for configuration
 
-Generate local nuget feed:
+### Configuration
+In Admin mode there are a Siteimprove tool to setup configuration
 
-create folder to host the feed for example /c/Projects/SiteimprovePlugin/nuget-feed
+We allow the following groups access:
+* Administrators, WebAdmins, CmsAdmins, SiteimproveAdmins
 
-PS .\nuget.exe add SiteImprove.Optimizely.Plugin\bin\Debug\SiteImprove.Optimizely.Plugin.4.0.6-rc.nupkg -Source nuget-feed
-$ ./nuget.exe add SiteImprove.Optimizely.Plugin/bin/Debug/SiteImprove.Optimizely.Plugin.4.0.6-rc.nupkg -Source /c/Projects/SiteimprovePlugin/nuget-feed
+SiteimproveAdmins is a custom group, where you can assign any group in your solution

@@ -13,7 +13,7 @@ namespace SiteImprove.Optimizely.Plugin
             string url = ServiceLocator.Current.GetInstance<IModuleResourceResolver>().ResolvePath(Constants.SiteImproveModuleName, "SiteimproveAdmin");
             UrlMenuItem urlMenuItem = new UrlMenuItem("SiteImprove", MenuPaths.Global + "/cms/admin/siteimprove", url)
             {
-                SortIndex = 70,
+                SortIndex = SortIndex.Late,
                 Alignment = MenuItemAlignment.Left,
                 AuthorizationPolicy = Constants.SiteImproveAuthorizationPolicy
             };
