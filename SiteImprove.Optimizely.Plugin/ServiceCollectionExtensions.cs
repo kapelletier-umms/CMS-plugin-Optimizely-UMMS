@@ -1,11 +1,11 @@
 ﻿using EPiServer.Shell.Modules;
-using Microsoft.Extensions.DependencyInjection;
+using SiteImprove.Optimizely.Plugin;
 using System;
 using System.Linq;
 
-namespace SiteImprove.Optimizely.Plugin
+namespace Microsoft.Extensions.DependencyInjection //this namespace is used to follow convention
 {
-    public static class ServiceCollectionExtensions
+    public static class SiteimproveServiceCollectionExtensions
     {
         /// <summary>
         /// Adds the Siteimprove module to the Admin view
