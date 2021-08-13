@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SiteImprove.Optimizely.Plugin.Helper;
 using SiteImprove.Optimizely.Plugin.Models;
 using SiteImprove.Optimizely.Plugin.Repositories;
 

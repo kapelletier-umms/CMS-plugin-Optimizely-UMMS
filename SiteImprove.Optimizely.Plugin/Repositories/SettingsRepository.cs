@@ -2,6 +2,7 @@
 using EPiServer.Data;
 using EPiServer.Data.Dynamic;
 using EPiServer.ServiceLocation;
+using SiteImprove.Optimizely.Plugin.Helper;
 using SiteImprove.Optimizely.Plugin.Models;
 
 namespace SiteImprove.Optimizely.Plugin.Repositories

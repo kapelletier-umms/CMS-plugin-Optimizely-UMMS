@@ -4,9 +4,10 @@ using EPiServer.Core;
 using EPiServer.Framework;
 using EPiServer.Framework.Initialization;
 using EPiServer.ServiceLocation;
+using SiteImprove.Optimizely.Plugin.Helper;
 using SiteImprove.Optimizely.Plugin.Repositories;
 
-namespace SiteImprove.Optimizely.Plugin
+namespace SiteImprove.Optimizely.Plugin.Infrastructure
 {
     [ModuleDependency(typeof(ServiceContainerInitialization))]
     public class EventModule : IInitializableModule
@@ -26,9 +27,7 @@ namespace SiteImprove.Optimizely.Plugin
 
         private void ContentEvents_PublishedContent(object sender, ContentEventArgs e)
         {
-            PageData page = e.Content as PageData;
-
-            if (page == null)
+            if (e.Content is not PageData page)
                 return;
 
             // Page is home page

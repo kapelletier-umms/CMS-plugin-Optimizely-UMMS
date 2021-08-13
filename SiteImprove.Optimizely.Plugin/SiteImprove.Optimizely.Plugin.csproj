@@ -11,15 +11,12 @@
     <PackageIcon>icon.png</PackageIcon>
     <PackageIconUrl>https://https://d7s94cee1vibl.cloudfront.net/images/favicons/apple-touch-icon.png</PackageIconUrl>
     <Description>Optimizely plugin from SiteImprove</Description>
-	<Version>4.0.28-rc</Version>
+    <Version>4.0.31-rc</Version>
   </PropertyGroup>
 
   <ItemGroup>
-	  <None Include="images\icon.png" Pack="true" PackagePath="\" />
-	  <None Include="modules\_protected\SiteImprove.Optimizely.Plugin_files\module.config" />
-	  <None Include="modules\_protected\SiteImprove.Optimizely.Plugin_files\Views\SiteimproveAdmin\_Layout.cshtml" />
-	  <None Include="modules\_protected\SiteImprove.Optimizely.Plugin_files\Views\_ViewImports.cshtml" />
-	  <None Include="SiteImprove.Optimizely.Plugin.targets" Pack="true" PackagePath="\build\net5.0\" />
+    <None Include="images\icon.png" Pack="true" PackagePath="\" />
+    <None Include="SiteImprove.Optimizely.Plugin.targets" Pack="true" PackagePath="\build\net5.0\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,17 +25,17 @@
 
   <ItemGroup>
     <Content Include="modules\_protected\SiteImprove.Optimizely.Plugin\*">
-		<PackageCopyToOutput>true</PackageCopyToOutput>
-	</Content>	
+      <PackageCopyToOutput>true</PackageCopyToOutput>
+	</Content>
   </ItemGroup>
 
   <ItemGroup>
     <Content Remove="modules\_protected\SiteImprove.Optimizely.Plugin_files\**\*" />
   </ItemGroup>
 
-	<Target Name="ZipPluginContent" AfterTargets="AfterBuild">
-		<Message Text="Zipping module" />
-		<ZipDirectory Overwrite="true" SourceDirectory="modules\_protected\SiteImprove.Optimizely.Plugin_files" DestinationFile="modules\_protected\SiteImprove.Optimizely.Plugin\SiteImprove.Optimizely.Plugin.zip" />
-	</Target>
+  <Target Name="ZipPluginContent" AfterTargets="AfterBuild">
+    <Message Text="Zipping module" />
+    <ZipDirectory Overwrite="true" SourceDirectory="modules\_protected\SiteImprove.Optimizely.Plugin_files" DestinationFile="modules\_protected\SiteImprove.Optimizely.Plugin\SiteImprove.Optimizely.Plugin.zip" />
+  </Target>
 
 </Project>

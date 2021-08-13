@@ -7,6 +7,7 @@ using EPiServer.ServiceLocation;
 using EPiServer.Web;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SiteImprove.Optimizely.Plugin.Helper;
 using SiteImprove.Optimizely.Plugin.Repositories;
 
 namespace SiteImprove.Optimizely.Plugin.Controllers

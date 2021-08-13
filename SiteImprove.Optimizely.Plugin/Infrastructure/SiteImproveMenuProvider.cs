@@ -3,7 +3,7 @@ using EPiServer.ServiceLocation;
 using EPiServer.Shell.Navigation;
 using System.Collections.Generic;
 
-namespace SiteImprove.Optimizely.Plugin
+namespace SiteImprove.Optimizely.Plugin.Infrastructure
 {
     [MenuProvider]
     public class SiteImproveMenuProvider : IMenuProvider

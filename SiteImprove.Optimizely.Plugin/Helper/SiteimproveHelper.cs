@@ -11,7 +11,7 @@ using EPiServer.Web;
 using EPiServer.Web.Routing;
 using Newtonsoft.Json;
 
-namespace SiteImprove.Optimizely.Plugin
+namespace SiteImprove.Optimizely.Plugin.Helper
 {
     [ServiceConfiguration(typeof(ISiteimproveHelper))]
     public class SiteimproveHelper : ISiteimproveHelper
