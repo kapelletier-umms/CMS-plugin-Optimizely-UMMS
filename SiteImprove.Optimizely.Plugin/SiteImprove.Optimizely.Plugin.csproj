@@ -9,7 +9,7 @@
     <PackageTags>SiteImprove SEO</PackageTags>
     <PackageProjectUrl>https://github.com/Siteimprove/CMS-plugin-Episerver</PackageProjectUrl>
     <PackageIcon>icon.png</PackageIcon>
-    <PackageIconUrl>https://https://d7s94cee1vibl.cloudfront.net/images/favicons/apple-touch-icon.png</PackageIconUrl>
+    <PackageIconUrl>https://d7s94cee1vibl.cloudfront.net/images/favicons/apple-touch-icon.png</PackageIconUrl>
     <Description>Optimizely plugin from SiteImprove</Description>
     <Version>4.0.31-rc</Version>
   </PropertyGroup>
@@ -31,6 +31,10 @@
 
   <ItemGroup>
     <Content Remove="modules\_protected\SiteImprove.Optimizely.Plugin_files\**\*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="modules\_protected\SiteImprove.Optimizely.Plugin\" />
   </ItemGroup>
 
   <Target Name="ZipPluginContent" AfterTargets="AfterBuild">
