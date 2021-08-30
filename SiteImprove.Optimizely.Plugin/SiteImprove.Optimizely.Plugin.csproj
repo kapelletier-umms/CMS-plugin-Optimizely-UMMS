@@ -11,7 +11,7 @@
     <PackageIcon>icon.png</PackageIcon>
     <PackageIconUrl>https://d7s94cee1vibl.cloudfront.net/images/favicons/apple-touch-icon.png</PackageIconUrl>
     <Description>Optimizely plugin from SiteImprove</Description>
-    <Version>4.0.32-rc</Version>
+    <Version>4.0.33-rc</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="modules\_protected\SiteImprove.Optimizely.Plugin\*">
+    <Content Include="modules\_protected\SiteImprove.Optimizely.Plugin\SiteImprove.Optimizely.Plugin.zip">
       <PackageCopyToOutput>true</PackageCopyToOutput>
 	</Content>
   </ItemGroup>
@@ -33,7 +33,7 @@
     <Content Remove="modules\_protected\SiteImprove.Optimizely.Plugin_files\**\*" />
   </ItemGroup>
 
-  <Target Name="ZipPluginContent" AfterTargets="AfterBuild">
+  <Target Name="ZipPluginContent" AfterTargets="BeforeBuild">
     <Message Text="Zipping module" />
     <ZipDirectory Overwrite="true" SourceDirectory="modules\_protected\SiteImprove.Optimizely.Plugin_files" DestinationFile="modules\_protected\SiteImprove.Optimizely.Plugin\SiteImprove.Optimizely.Plugin.zip" />
   </Target>

@@ -18,11 +18,7 @@ About Siteimprove:
 Siteimprove's cloud-based software provides eye-opening insights that empower you and your team to understand, prioritize, and optimize the performance of your website and beyond. With the world’s most comprehensive Digital Presence Optimization (DPO) solution, we provide the clarity and direction needed to run a high-performance website. More than 7,000 organizations around the world trust the Siteimprove Intelligence Platform (SIP) to perfect their digital presence. Learn why at siteimprove.com.
 
 ### Installation
-First install the nuget package SiteImprove.Optimizely.Plugin from the Optimizely nuget feed
-Second add the following line to the ConfigureServices method in Startup class
-```
-services.AddSiteImprove();
-```
+Install the nuget package SiteImprove.Optimizely.Plugin from the Optimizely nuget feed
 Then the tool will be installed and show up on the right in Edit mode and in Admin mode there will be a Siteimprove tool for configuration
 
 ### Configuration
