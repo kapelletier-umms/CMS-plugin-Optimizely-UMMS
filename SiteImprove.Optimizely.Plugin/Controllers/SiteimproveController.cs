@@ -52,16 +52,16 @@ namespace SiteImprove.Optimizely.Plugin.Controllers
 
             if (page != null)
             {
-                if (page.CheckPublishedStatus(PagePublishedStatus.Published))
-                {
+                //if (page.CheckPublishedStatus(PagePublishedStatus.Published))
+                //{
                     var externalUrl = _siteimproveHelper.GetExternalUrl(page);
                     return Json(new { url = externalUrl, isDomain = false });
-                }
-                else
-                {
-                    var currentSiteUrl = SiteDefinition.Current.SiteUrl.ToString();
-                    return Json(new { url = currentSiteUrl, isDomain = true });
-                }
+                //}
+                //else
+                //{
+                //    var currentSiteUrl = SiteDefinition.Current.SiteUrl.ToString();
+                //    return Json(new { url = currentSiteUrl, isDomain = true });
+                //}
             }
 
             return StatusCode((int)HttpStatusCode.BadRequest);
