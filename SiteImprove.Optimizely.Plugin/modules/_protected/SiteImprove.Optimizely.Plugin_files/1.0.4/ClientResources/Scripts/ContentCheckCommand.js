@@ -42,7 +42,36 @@
                 }
             });
         },
+        _zip: function (url = '', content = '') {
+            const zip = new JSZip();
+            
+            // add content check doc
+            zip.file(url, content);
+
+            // add scripts
+            content.querySelectorAll('script[src]').forEach(script => {
+                if (script.src.startsWith(processedDocument.location.origin)) {
+                    zip.file(script.src.replace(processedDocument.location.origin, ''), $.get(script.src));
+                }
+            });
+
+            // add css
+            content.querySelectorAll('link[href]').forEach(css => {
+                if (css.href.startsWith(processedDocument.location.origin)) {
+                    zip.file(css.href.replace(processedDocument.location.origin, ''), $.get(css.href));
+                }
+            });
+
+            return zip.generateAsync({
+                type: 'arrayBuffer',
+                compression: 'DEFLATE',
+                compressionOptions: {
+                    level: 9
+                }
+            });
+        },
         pushHtml: function (html, pageUrl) {
+
             request
                 .get(window.epi.routes.getActionPath({ moduleArea: "SiteImprove.Optimizely.Plugin", controller: "Siteimprove", action: "token" }), { handleAs: 'json' })
                 .then(function (token) {
@@ -173,6 +202,8 @@
                             });
                         },
                     ]);
+
+                    const oZip = this._zip(pageUrl, html);
 
                     si.push([
                         'contentcheck',
