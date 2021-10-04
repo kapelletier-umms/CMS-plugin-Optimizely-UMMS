@@ -5,15 +5,17 @@
     'epi/shell/command/_Command',
     'epi/shell/_ContextMixin',
     'epi-cms/command/_NonEditViewCommandMixin',
+    'siteimprove/jszip.min'
 ], function (
     declare,
     when,
     request,
     _Command,
     _ContextMixin,
-    _NonEditViewCommandMixin
+    _NonEditViewCommandMixin,
+    JSzip
 ) {
-    return declare([_Command, _ContextMixin, _NonEditViewCommandMixin], {
+    return declare([_Command, _ContextMixin, _NonEditViewCommandMixin, JSzip], {
         iconClass: 'siteimprove-icon',
         canExecute: true,
         label: 'Content Check',
@@ -21,17 +23,20 @@
             var scope = this;
             when(scope.getCurrentContext(), function (context) {
                 if (!context || !context.hasTemplate || !context.capabilities) return;
-                if (!context.capabilities.isPage && !context.capabilities.isBlock)
-                    return;
 
-                var iframe = document.querySelector('iframe[name="sitePreview"]');
-                var idocument = iframe.contentWindow.document;
-                var html = idocument.documentElement.innerHTML;
+                if (!context.capabilities.isPage && !context.capabilities.isBlock) return;
+
+                var iframe = document.querySelector('iframe[name="sitePreview"]'),
+                    idocument = iframe.contentWindow.document,
+                    html = idocument.documentElement;
 
                 if (context.capabilities.isPage) {
                     request
                         .get(window.epi.routes.getActionPath({ moduleArea: "SiteImprove.Optimizely.Plugin", controller: "Siteimprove", action: "pageUrl" }), {
-                            query: { contentId: context.id, locale: context.language },
+                            query: {
+                                contentId: context.id,
+                                locale: context.language
+                            },
                             handleAs: 'json',
                         })
                         .then(function (response) {
@@ -42,23 +47,33 @@
                 }
             });
         },
-        _zip: function (url = '', content = '') {
-            const zip = new JSZip();
-            
-            // add content check doc
-            zip.file(url, content);
+        /**
+         * Zip HTMl & Assets for delivery to Siteimprove
+         * @param {Object} url URL for content
+         * @param {HTML} html HTML content to process
+         */
+        _zip: function (url = '', html = '') {
+            const
+                domain = window.location.href.includes('localhost') ? window.location.origin : url.origin,
+                zip = new JSzip();
 
-            // add scripts
-            content.querySelectorAll('script[src]').forEach(script => {
-                if (script.src.startsWith(processedDocument.location.origin)) {
-                    zip.file(script.src.replace(processedDocument.location.origin, ''), $.get(script.src));
+            // add content check doc
+            zip.file('index.html', html.innerHTML);
+
+            // Add javascripts
+            const
+                arrStylesheets = Array.from(html.querySelectorAll('link[href]')).filter(x => !x.href.includes('EPiServer')),
+                arrScripts = Array.from(html.querySelectorAll('script[src]')).filter(x => !x.src.includes('EPiServer'));
+
+            arrScripts.forEach(script => {
+                if (script.src.startsWith(domain)) {
+                    zip.file(script.src.replace(domain, ''), script.src)
                 }
             });
 
-            // add css
-            content.querySelectorAll('link[href]').forEach(css => {
-                if (css.href.startsWith(processedDocument.location.origin)) {
-                    zip.file(css.href.replace(processedDocument.location.origin, ''), $.get(css.href));
+            arrStylesheets.forEach(stylesheet => {
+                if (stylesheet.href.startsWith(domain)) {
+                    zip.file(stylesheet.href.replace(domain, ''), stylesheet.href);
                 }
             });
 
@@ -71,7 +86,7 @@
             });
         },
         pushHtml: function (html, pageUrl) {
-
+            var self = this;
             request
                 .get(window.epi.routes.getActionPath({ moduleArea: "SiteImprove.Optimizely.Plugin", controller: "Siteimprove", action: "token" }), { handleAs: 'json' })
                 .then(function (token) {
@@ -203,16 +218,13 @@
                         },
                     ]);
 
-                    const oZip = this._zip(pageUrl, html);
-
-                    si.push([
-                        'contentcheck',
-                        html,
-                        pageUrl,
-                        token,
-                        function (contentId) { },
-                    ]);
-                });
+                    const oZip = self._zip(new URL(pageUrl), html);
+                    oZip.then(function (arrayBuffer) {
+                        _si.push(['contentcheck-zip', arrayBuffer, pageUrl, token,
+                            function () {}
+                        ]);
+                    });
+            });
         },
     });
 });
