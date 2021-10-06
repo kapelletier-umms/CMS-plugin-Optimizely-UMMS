@@ -80,12 +80,23 @@
 
                     rq.open('GET', url);
                     rq.send();
+                },
+                getFilename = function (path, domain) {
+                    let file = '';
+
+                    // Remove location 
+                    file = path.replace(domain, '');
+
+                    // Remove first "/" to avoid clashes in zip
+                    file = file.substring(1);
+
+                    return file;
                 };
                         
             arrScripts.forEach(script => {
                 if (script.src.startsWith(domain)) {
                     fetchRessource(script.src, function (data) {
-                        zip.file(script.src.replace(domain, ''), data.response);
+                        zip.file(getFilename(script.src, domain), data.response);
                     });
                     
                 }
@@ -94,7 +105,7 @@
             arrStylesheets.forEach(stylesheet => {
                 if (stylesheet.href.startsWith(domain)) {
                     fetchRessource(stylesheet.href, function (data) {
-                        zip.file(stylesheet.href.replace(domain, ''), data.response);
+                        zip.file(getFilename(stylesheet.href, domain), data.response);
                     });
                 }
             });
