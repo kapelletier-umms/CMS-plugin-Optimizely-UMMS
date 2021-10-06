@@ -63,17 +63,39 @@
             // Add javascripts
             const
                 arrStylesheets = Array.from(html.querySelectorAll('link[href]')).filter(x => !x.href.includes('EPiServer')),
-                arrScripts = Array.from(html.querySelectorAll('script[src]')).filter(x => !x.src.includes('EPiServer'));
+                arrScripts = Array.from(html.querySelectorAll('script[src]')).filter(x => !x.src.includes('EPiServer')),
+                fetchRessource = function (url, cb) {
+                    const rq = new XMLHttpRequest();
 
+                    // Events
+                    rq.onreadystatechange = function (data) {
+                        if (rq.readyState === 4 && rq.status === 200) {
+                            cb({
+                                'url': rq.responseURL,
+                                'response': rq.response,
+                                'responseText': rq.responseText
+                            });
+                        }
+                    }
+
+                    rq.open('GET', url);
+                    rq.send();
+                };
+                        
             arrScripts.forEach(script => {
                 if (script.src.startsWith(domain)) {
-                    zip.file(script.src.replace(domain, ''), script.src)
+                    fetchRessource(script.src, function (data) {
+                        zip.file(script.src.replace(domain, ''), data.response);
+                    });
+                    
                 }
             });
 
             arrStylesheets.forEach(stylesheet => {
                 if (stylesheet.href.startsWith(domain)) {
-                    zip.file(stylesheet.href.replace(domain, ''), stylesheet.href);
+                    fetchRessource(stylesheet.href, function (data) {
+                        zip.file(stylesheet.href.replace(domain, ''), data.response);
+                    });
                 }
             });
 
