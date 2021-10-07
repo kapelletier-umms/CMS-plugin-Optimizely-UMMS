@@ -20,6 +20,7 @@
     return declare([_Command, _ContextMixin, _NonEditViewCommandMixin, JSzip], {
         iconClass: 'siteimprove-icon',
         canExecute: true,
+        package: [],
         label: 'Content Check',
         _execute: function () {
             var scope = this;
@@ -54,35 +55,23 @@
          * @param {Object} url URL for content
          * @param {HTML} html HTML content to process
          */
-        _zip: function (url = '', html = '') {
+        _findAndGenerateAssets: function (url = '', html = '') {
             const
-                domain = window.location.href.includes('localhost') ? window.location.origin : url.origin,
-                zip = new JSzip();
+                self = this,
+                domain = window.location.href.includes('localhost') ? window.location.origin : url.origin;
 
             // add content check doc
-            zip.file('index.html', html.innerHTML);
+            self.package.push({
+                'filename': 'index.html',
+                'content': html.innerHTML
+            });
 
             // Add javascripts
             const
-                arrStylesheets = Array.from(html.querySelectorAll('link[href]')).filter(x => !x.href.includes('EPiServer')),
-                arrScripts = Array.from(html.querySelectorAll('script[src]')).filter(x => !x.src.includes('EPiServer')),
-                fetchRessource = function (url, cb) {
-                    const rq = new XMLHttpRequest();
-
-                    // Events
-                    rq.onreadystatechange = function (data) {
-                        if (rq.readyState === 4 && rq.status === 200) {
-                            cb({
-                                'url': rq.responseURL,
-                                'response': rq.response,
-                                'responseText': rq.responseText
-                            });
-                        }
-                    }
-
-                    rq.open('GET', url);
-                    rq.send();
-                },
+                arrAssets = Array.from(html.querySelectorAll('script[src], link[href]')).filter(x => {
+                    const source = typeof x.src !== 'undefined' ? x.src : x.href;
+                    return !source.includes('EPiServer');
+                }),
                 getFilename = function (path, domain) {
                     let file = '';
 
@@ -94,41 +83,34 @@
 
                     return file;
                 };
-                        
-            arrScripts.forEach(script => {
-                if (script.src.startsWith(domain)) {
-                    fetchRessource(script.src, function (data) {
-                        zip.file(getFilename(script.src, domain), data.response);
-                    });
-                    
-                }
+
+            let arrPromises = [];
+            arrAssets.forEach(asset => {
+                const
+                    source = typeof asset.src !== 'undefined' ? asset.src : asset.href,
+                    filename = getFilename(source, domain);
+
+                // Grab resource
+                arrPromises.push(
+                    fetch(source)
+                        .then(resp => {
+                            if (resp.ok) {
+                                const data = resp.blob();
+                                /*zip.file(filename, data);*/
+                                self.package.push({
+                                    'filename': filename,
+                                    'content': data
+                                });
+                            } else {
+                                throw new Error(resp.status + " Failed Fetch ");
+                            }
+                        })
+                        .catch(resp => console.log("error", resp))
+                );
             });
 
-            arrStylesheets.forEach(stylesheet => {
-                if (stylesheet.href.startsWith(domain)) {
-                    fetchRessource(stylesheet.href, function (data) {
-                        zip.file(getFilename(stylesheet.href, domain), data.response);
-                    });
-                }
-            });
-
-            zip.generateAsync({
-                type: 'arrayBuffer',
-                compression: 'DEFLATE',
-                compressionOptions: {
-                    level: 9
-                }
-            }).then(function (blob) {
-                saveAs(blob, "hello.zip");
-            });
-
-            return zip.generateAsync({
-                type: 'arrayBuffer',
-                compression: 'DEFLATE',
-                compressionOptions: {
-                    level: 9
-                }
-            });
+            // Wait for all resources has been fetched and added to queue
+            return Promise.all(arrPromises);
         },
         pushHtml: function (html, pageUrl) {
             var self = this;
@@ -263,11 +245,40 @@
                         },
                     ]);
 
-                    const oZip = self._zip(new URL(pageUrl), html);
-                    oZip.then(function (arrayBuffer) {
-                        _si.push(['contentcheck-zip', arrayBuffer, pageUrl, token,
-                            function () {}
-                        ]);
+                    self._findAndGenerateAssets(new URL(pageUrl), html)
+                        .then(() => {
+                        // Assets are fetched and pushed to global scope, create package
+                        const oZip = new JSzip();
+
+                        self.package.forEach(item => oZip.file(item.filename, item.content));
+
+                        // Genereate package
+                        const oLibrary = oZip.generateAsync({
+                            type: 'arrayBuffer',
+                            compression: 'DEFLATE',
+                            compressionOptions: {
+                                level: 9
+                            }
+                        });
+
+                        // For debug purpose
+                        oZip.generateAsync({
+                            type: 'blob',
+                            compression: 'DEFLATE',
+                            compressionOptions: {
+                                level: 9
+                            }
+                        }).then(function (blob) {
+                            saveAs(blob, "debug.zip");
+                        });
+
+                        oLibrary.then((arrayBuffer) => {
+                            _si.push(['contentcheck-zip', arrayBuffer, pageUrl, token,
+                                function () {
+                                    console.log("run feedback");
+                                }
+                            ]);
+                        });
                     });
             });
         },
