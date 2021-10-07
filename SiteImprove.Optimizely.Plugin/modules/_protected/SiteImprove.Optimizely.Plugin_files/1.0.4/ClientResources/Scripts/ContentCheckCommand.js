@@ -5,7 +5,8 @@
     'epi/shell/command/_Command',
     'epi/shell/_ContextMixin',
     'epi-cms/command/_NonEditViewCommandMixin',
-    'siteimprove/jszip.min'
+    'siteimprove/jszip.min',
+    'siteimprove/FileSaver.min'
 ], function (
     declare,
     when,
@@ -13,7 +14,8 @@
     _Command,
     _ContextMixin,
     _NonEditViewCommandMixin,
-    JSzip
+    JSzip,
+    FileSaver
 ) {
     return declare([_Command, _ContextMixin, _NonEditViewCommandMixin, JSzip], {
         iconClass: 'siteimprove-icon',
@@ -108,6 +110,16 @@
                         zip.file(getFilename(stylesheet.href, domain), data.response);
                     });
                 }
+            });
+
+            zip.generateAsync({
+                type: 'arrayBuffer',
+                compression: 'DEFLATE',
+                compressionOptions: {
+                    level: 9
+                }
+            }).then(function (blob) {
+                saveAs(blob, "hello.zip");
             });
 
             return zip.generateAsync({
