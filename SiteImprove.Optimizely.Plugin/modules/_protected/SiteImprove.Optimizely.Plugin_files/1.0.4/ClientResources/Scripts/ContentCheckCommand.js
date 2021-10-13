@@ -29,66 +29,78 @@
 
                 if (!context.capabilities.isPage && !context.capabilities.isBlock) return;
 
-                var iframe = document.querySelector('iframe[name="sitePreview"]'),
-                    idocument = iframe.contentWindow.document,
-                    html = idocument.documentElement;
+                const path = context.previewUrl;
 
-                if (context.capabilities.isPage) {
-                    request
-                        .get(window.epi.routes.getActionPath({ moduleArea: "SiteImprove.Optimizely.Plugin", controller: "Siteimprove", action: "pageUrl" }), {
-                            query: {
-                                contentId: context.id,
-                                locale: context.language
-                            },
-                            handleAs: 'json',
-                        })
-                        .then(function (response) {
-                            scope.pushHtml(html, response.isDomain ? '' : response.url);
-                        });
-                } else {
-                    scope.pushHtml(html, '');
-                }
+                // Try fetching the content
+                fetch(window.location.origin + path)
+                    .then((resp) => {
+                        if (resp.ok) {
+                            return resp.text();
+                        }
+                    }).then(html => {
+                        if (context.capabilities.isPage) {
+                            request
+                                .get(window.epi.routes.getActionPath({ moduleArea: "SiteImprove.Optimizely.Plugin", controller: "Siteimprove", action: "pageUrl" }), {
+                                    query: {
+                                        contentId: context.id,
+                                        locale: context.language
+                                    },
+                                    handleAs: 'json',
+                                })
+                                .then((response) => {
+                                    scope.pushHtml(html, response.isDomain ? '' : response.url);
+                                });
+                        } else {
+                            scope.pushHtml(html, '');
+                        }
+                    });
             });
         },
         /**
-         * Zip HTMl & Assets for delivery to Siteimprove
-         * @param {Object} url URL for content
+         * Zip HTML & Assets for delivery to Siteimprove
          * @param {HTML} html HTML content to process
          */
-        _findAndGenerateAssets: function (url = '', html = '') {
-            const
-                self = this,
-                domain = window.location.href.includes('localhost') ? window.location.origin : url.origin;
+        _findAndGenerateAssets: function (html = '') {
+            if (!html.trim().length) {
+                throw new Error("Siteimprove: Missing HTML for parsing");
+            }
 
-            // add content check doc
-            self.package.push({
-                'filename': 'index.html',
-                'content': html.innerHTML
-            });
-
-            // Add javascripts
+            // Refs
             const
-                arrAssets = Array.from(html.querySelectorAll('script[src], link[href]')).filter(x => {
+                oParser = new DOMParser(),
+                scope = this,
+                domain = window.location.origin;
+
+            // Properties
+            let
+                strHTML = html,
+                markup = oParser.parseFromString(strHTML, 'text/html'),
+                arrAssets = Array.from(markup.querySelectorAll('script[src], link[href]')).filter(x => {
                     const source = typeof x.src !== 'undefined' ? x.src : x.href;
-                    return !source.includes('EPiServer');
+                    return !source.includes('EPiServer') && !source.includes('Util');
                 }),
-                getFilename = function (path, domain) {
+                getAssetProperties = function (path, domain) {
                     let file = '';
 
                     // Remove location 
                     file = path.replace(domain, '');
-
-                    // Remove first "/" to avoid clashes in zip
-                    file = file.substring(1);
-
-                    return file;
+                                        
+                    return {
+                        'zip': file.substring(1), // Remove first "/" to avoid clashes in zip
+                        'original': file,
+                        'relative': '.' + file
+                    };
                 };
 
+            // Start fethcing assets + adjusting markup
             let arrPromises = [];
             arrAssets.forEach(asset => {
                 const
                     source = typeof asset.src !== 'undefined' ? asset.src : asset.href,
-                    filename = getFilename(source, domain);
+                    file = getAssetProperties(source, domain);
+
+                // Replace path with relative path
+                strHTML = strHTML.replace(file.original, file.relative);
 
                 // Grab resource
                 arrPromises.push(
@@ -96,17 +108,24 @@
                         .then(resp => {
                             if (resp.ok) {
                                 const data = resp.blob();
-                                /*zip.file(filename, data);*/
-                                self.package.push({
-                                    'filename': filename,
+
+                                // Add file to package
+                                scope.package.push({
+                                    'filename': file.zip,
                                     'content': data
                                 });
                             } else {
-                                throw new Error(resp.status + " Failed Fetch ");
+                                throw new Error(resp.status + " Failed Fetch for" + source);
                             }
                         })
-                        .catch(resp => console.log("error", resp))
+                        .catch(resp => console.log("Siteimprove: Issue with feching ressource", resp))
                 );
+            });
+
+            // Add html as index
+            scope.package.push({
+                'filename': 'index.html',
+                'content': strHTML
             });
 
             // Wait for all resources has been fetched and added to queue
@@ -245,7 +264,7 @@
                         },
                     ]);
 
-                    self._findAndGenerateAssets(new URL(pageUrl), html)
+                    self._findAndGenerateAssets(html)
                         .then(() => {
                         // Assets are fetched and pushed to global scope, create package
                         const oZip = new JSzip();
