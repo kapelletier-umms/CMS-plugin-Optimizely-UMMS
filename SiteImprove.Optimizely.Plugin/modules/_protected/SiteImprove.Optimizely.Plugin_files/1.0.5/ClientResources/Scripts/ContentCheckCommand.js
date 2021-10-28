@@ -283,7 +283,6 @@
                         oLibrary.then((arrayBuffer) => {
                             _si.push(['contentcheck-zip', arrayBuffer, pageUrl, token,
                                 function () {
-                                    console.log("run feedback");
                                 }
                             ]);
                         });
