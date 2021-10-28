@@ -77,7 +77,7 @@
                 markup = oParser.parseFromString(strHTML, 'text/html'),
                 arrAssets = Array.from(markup.querySelectorAll('script[src], link[href]')).filter(x => {
                     const source = typeof x.src !== 'undefined' ? x.src : x.href;
-                    return !source.includes('EPiServer') && !source.includes('Util');
+                    return (!source.includes('EPiServer') && !source.includes('Util')) && (source.includes('.js') || source.includes('.css'));
                 }),
                 getAssetProperties = function (path, domain) {
                     let file = '';
@@ -278,17 +278,6 @@
                             compressionOptions: {
                                 level: 9
                             }
-                        });
-
-                        // For debug purpose
-                        oZip.generateAsync({
-                            type: 'blob',
-                            compression: 'DEFLATE',
-                            compressionOptions: {
-                                level: 9
-                            }
-                        }).then(function (blob) {
-                            saveAs(blob, "debug.zip");
                         });
 
                         oLibrary.then((arrayBuffer) => {
