@@ -4,7 +4,7 @@
     {
         public string Token { get; set; }
         
-        public bool NoRecheck { get; set; }
+        public bool Recheck { get; set; }
 
         public string ApiUser { get; set; }
 

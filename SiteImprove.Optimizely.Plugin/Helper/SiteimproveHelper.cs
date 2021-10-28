@@ -133,6 +133,7 @@ namespace SiteImprove.Optimizely.Plugin.Helper
                     var content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json");
                     var response = client.PostAsync(Constants.SiteImproveRecheckUrl, content).Result;
                 }
+                _log.Information($"Siteimprove recheck called with type {type} for url {url}");
             }
             catch (Exception ex)
             {

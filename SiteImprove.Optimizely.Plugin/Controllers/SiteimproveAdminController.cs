@@ -28,13 +28,13 @@ namespace SiteImprove.Optimizely.Plugin.Controllers
             if (newToken)
             {
                 settings.Token = _siteimproveHelper.RequestToken();
-                _settingsRepo.SaveToken(settings.Token, settings.NoRecheck, settings.ApiUser, settings.ApiKey);
+                _settingsRepo.SaveToken(settings.Token, settings.Recheck, settings.ApiUser, settings.ApiKey);
             }
 
             var vm = new SettingsViewModel()
             {
                 Token = settings.Token,
-                NoRecheck = settings.NoRecheck,
+                Recheck = settings.Recheck,
                 ApiUser = settings.ApiUser,
                 ApiKey = settings.ApiKey,
                 PrepublishCheckEnabled = _siteimproveHelper.GetPrepublishCheckEnabled(settings.ApiUser, settings.ApiKey)
@@ -44,14 +44,14 @@ namespace SiteImprove.Optimizely.Plugin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Save(bool noRecheck, string apiUser, string apiKey)
+        public ActionResult Save(bool recheck, string apiUser, string apiKey)
         {
             var settings = this._settingsRepo.GetSetting();
-            settings.NoRecheck = noRecheck;
+            settings.Recheck = recheck;
             settings.ApiUser = apiUser;
             settings.ApiKey = apiKey;
 
-            _settingsRepo.SaveToken(settings.Token, settings.NoRecheck, settings.ApiUser, settings.ApiKey);
+            _settingsRepo.SaveToken(settings.Token, settings.Recheck, settings.ApiUser, settings.ApiKey);
 
             return RedirectToAction("Index");
         }

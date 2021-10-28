@@ -34,20 +34,20 @@ namespace SiteImprove.Optimizely.Plugin.Repositories
             return settings.Token;
         }
 
-        public void SaveToken(string token, bool noRecheck = true, string apiUser = null, string apiKey = null)
+        public void SaveToken(string token, bool recheck = false, string apiUser = null, string apiKey = null)
         {
             var current = SettingStore.LoadAll<Settings>().ToArray().FirstOrDefault();
             if (current != null)
             {
                 current.Token = token;
-                current.NoRecheck = noRecheck;
+                current.Recheck = recheck;
                 current.ApiUser = apiUser;
                 current.ApiKey = apiKey;
                 SettingStore.Save(current, current.GetIdentity());
                 return;
             }
 
-            SettingStore.Save(new Settings { Token = token, NoRecheck = noRecheck, ApiUser = apiUser, ApiKey = apiKey });
+            SettingStore.Save(new Settings { Token = token, Recheck = recheck, ApiUser = apiUser, ApiKey = apiKey });
         }
 
         public Settings GetSetting()

@@ -105,14 +105,19 @@
                                                 <div class="control">
                                                     <div class="epi-uif-checkbox mdc-form-field">
                                                         <div class="mdc-ripple-upgraded--unbounded mdc-ripple-upgraded mdc-checkbox--upgraded mdc-checkbox mdc-checkbox--selected" style="--mdc-ripple-fg-size:22px; --mdc-ripple-fg-scale:1.81754; --mdc-ripple-left:9px; --mdc-ripple-top:9px;">
-                                                            @Html.CheckBoxFor(model => model.NoRecheck, new { @class = "mdc-checkbox__native-control" })
+                                                            @Html.CheckBoxFor(model => model.Recheck, new { @class = "mdc-checkbox__native-control" })
                                                             <div class="mdc-checkbox__background">
                                                                 <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24"><path class="mdc-checkbox__checkmark-path" fill="none" stroke="white" d="M1.73,12.91 8.1,19.28 22.79,4.59"></path></svg>
                                                                 <div class="mdc-checkbox__mixedmark"></div>
                                                             </div>
                                                             <div class="mdc-checkbox__ripple"></div>
                                                         </div>
-                                                        @Html.LabelFor(model => model.NoRecheck, "Dont recheck pages on publish")
+                                                        @Html.LabelFor(model => model.Recheck, "Recheck pages when an Editor publishes")
+                                                    </div>
+                                                </div>
+                                                <div style=" padding-left: 9px;">
+                                                    <div class="epi-uif-checkbox mdc-form-field">
+                                                        <span class="epi-uif-typography mdc-typography--body1" style=" color: rgba(8, 7, 54, 0.6); ">When selected a recheck will be performed whenever an editor publish a page. If a page is scheduled for publish later no recheck will be performed when it is published. The same goes for any other automatic publishing.</span>
                                                     </div>
                                                 </div>
                                             </div>

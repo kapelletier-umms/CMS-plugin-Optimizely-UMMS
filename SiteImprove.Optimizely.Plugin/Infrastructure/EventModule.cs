@@ -4,6 +4,7 @@ using EPiServer.Core;
 using EPiServer.Framework;
 using EPiServer.Framework.Initialization;
 using EPiServer.ServiceLocation;
+using Microsoft.AspNetCore.Http;
 using SiteImprove.Optimizely.Plugin.Helper;
 using SiteImprove.Optimizely.Plugin.Repositories;
 
@@ -14,12 +15,14 @@ namespace SiteImprove.Optimizely.Plugin.Infrastructure
     {
         private ISettingsRepository _settingsRepository;
         private bool _homeIsUnPublished = false;
+        private IHttpContextAccessor _httpContextAccessor;
         private ISiteimproveHelper _siteimproveHelper;
 
         public void Initialize(InitializationEngine context)
         {
             _settingsRepository = ServiceLocator.Current.GetInstance<ISettingsRepository>();
             _siteimproveHelper = ServiceLocator.Current.GetInstance<ISiteimproveHelper>();
+            _httpContextAccessor = ServiceLocator.Current.GetInstance<IHttpContextAccessor>();
 
             var contentEvents = ServiceLocator.Current.GetInstance<IContentEvents>();
             contentEvents.PublishedContent += ContentEvents_PublishedContent;
@@ -46,7 +49,7 @@ namespace SiteImprove.Optimizely.Plugin.Infrastructure
                 }
             }
 
-            if (!this._settingsRepository.GetSetting().NoRecheck)
+            if (_settingsRepository.GetSetting().Recheck && _httpContextAccessor.HttpContext != null)
             { 
                 if (page.CheckPublishedStatus(PagePublishedStatus.Published))
                 {
