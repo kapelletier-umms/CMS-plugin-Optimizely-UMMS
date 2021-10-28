@@ -31,23 +31,30 @@ namespace SiteImprove.Optimizely.Plugin.Helper
             {
                 var internalUrl = ServiceLocator.Current.GetInstance<IUrlResolver>().GetUrl(page.ContentLink);
 
-                if (internalUrl != null) //can be null for special pages like settings 
+                if (internalUrl == null) //can be null for special pages like settings 
                 {
-                    var siteUrl = SiteDefinition.Current.SiteUrl;
-                    var uriBuilder = new UrlBuilder(internalUrl)
-                    {
-                        Host = siteUrl.Host,
-                        Port = siteUrl.Port,
-                        Scheme = siteUrl.Scheme
-                    };
-                    return uriBuilder.Uri.ToString();
+                    return null;
                 }
 
-                return null;
+                var site = ServiceLocator.Current.GetInstance<ISiteDefinitionResolver>().GetByContent(page.ContentLink, false);
+
+                if(site == null) //could be null for pages not located under a startpage
+                {
+                    return null;
+                }
+
+                var siteUrl = site.SiteUrl;
+                var uriBuilder = new UrlBuilder(internalUrl)
+                {
+                    Host = siteUrl.Host,
+                    Port = siteUrl.Port,
+                    Scheme = siteUrl.Scheme
+                };
+                return uriBuilder.Uri.ToString();
             }
             catch (Exception ex)
             {
-                _log.Error("Could not resolve pageUrl. Perhaps SiteDefinition.Current cannot be resolved? Scheduled jobs requires a * binding to handle SiteDefinition.Current", ex);
+                _log.Error("Could not resolve pageUrl. Perhaps page is not under a startpage", ex);
                 return null;
             }
         }

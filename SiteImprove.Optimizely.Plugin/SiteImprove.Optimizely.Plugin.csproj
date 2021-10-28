@@ -4,14 +4,14 @@
     <TargetFramework>net5.0</TargetFramework>
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Copyright>Copyright © 2021</Copyright>
+    <Copyright>Copyright © SiteImprove 2021</Copyright>
     <Company>SiteImprove</Company>
+    <Authors>SiteImprove</Authors>
     <PackageTags>SiteImprove SEO</PackageTags>
     <PackageProjectUrl>https://github.com/Siteimprove/CMS-plugin-Episerver</PackageProjectUrl>
     <PackageIcon>icon.png</PackageIcon>
-    <PackageIconUrl>https://d7s94cee1vibl.cloudfront.net/images/favicons/apple-touch-icon.png</PackageIconUrl>
     <Description>Optimizely plugin from SiteImprove</Description>
-    <Version>4.0.46-rc</Version>
+    <Version>4.1.0-rc-3</Version>
   </PropertyGroup>
 
   <ItemGroup>

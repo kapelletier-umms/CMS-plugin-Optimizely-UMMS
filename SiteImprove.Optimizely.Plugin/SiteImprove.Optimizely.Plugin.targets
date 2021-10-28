@@ -4,10 +4,10 @@
         <SourceScripts Include="$(MSBuildThisFileDirectory)..\..\contentFiles\any\net5.0\modules\_protected\**\*"/>
     </ItemGroup>
 
-    <Target Name="CopyFiles" BeforeTargets="Build">
-        <Copy
+	<Target Name="CopyZipFiles" BeforeTargets="Build">
+		<Copy
             SourceFiles="@(SourceScripts)"
             DestinationFolder="$(MSBuildProjectDirectory)\modules\_protected\%(RecursiveDir)"
         />
-    </Target>
+	</Target>
 </Project>
