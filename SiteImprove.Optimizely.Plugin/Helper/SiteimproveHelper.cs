@@ -84,7 +84,7 @@ namespace SiteImprove.Optimizely.Plugin.Helper
             }
         }
 
-        public void EnablePrepublishCheck(string apiUser, string apiKey)
+        public bool EnablePrepublishCheck(string apiUser, string apiKey)
         {
             using (var client = new HttpClient())
             {
@@ -95,12 +95,20 @@ namespace SiteImprove.Optimizely.Plugin.Helper
                 try
                 {
                     var response = client.PostAsync($"{Constants.SiteImproveApiUrl}/settings/content_checking", null).Result;
+
+                    if(!response.IsSuccessStatusCode)
+                    {
+                        return false;
+                    }
                 }
                 catch (Exception ex)
                 {
                     _log.Error("Could not enable prepublish check.", ex);
+                    return false;
                 }
             }
+
+            return true;
         }
 
         public string RequestToken()

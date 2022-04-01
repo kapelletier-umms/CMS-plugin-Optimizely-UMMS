@@ -59,6 +59,23 @@
                                             </div>
                                         </div>
                                     </div>
+                                    @if (Model.PrepublishError)
+                                    {
+                                        <div class="edit-view__content" style="padding-left: 0; padding-right: 0;">
+                                            <div class="epi-uif-card edit-view__information mdc-card mdc-card--outlined" tabindex="0" style="min-height: auto; width: auto; background-color: #fff9e6;">
+                                                <div class="epi-uif-card-content-area">
+                                                    <div>
+                                                        <h2 class="epi-uif-typography mdc-typography--headline4">Sorry, it looks like there is a problem</h2>
+                                                        <span class="epi-uif-typography mdc-typography--subtitle2">It was caused by one of two issues:</span>
+                                                        <ul>
+                                                            <li style="list-style: inside"><span class="epi-uif-typography mdc-typography--body1">You do not have Prepublish as part of your subscription</span></li>
+                                                            <li style="list-style: inside"><span class="epi-uif-typography mdc-typography--body1">You do have Prepublish but you need to validate your API key and username in Settings</span></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
                                 </div>
                                 <div class="edit-view mdc-card--outlined edit-view__content">
                                     <div>

@@ -22,7 +22,7 @@ namespace SiteImprove.Optimizely.Plugin.Controllers
         [ViewData]
         public string Title { get; set; }
 
-        public ActionResult Index(bool newToken = false)
+        public ActionResult Index(bool newToken = false, bool prepublishError = false)
         {
             var settings = _settingsRepo.GetSetting();
             if (newToken)
@@ -37,7 +37,8 @@ namespace SiteImprove.Optimizely.Plugin.Controllers
                 Recheck = settings.Recheck,
                 ApiUser = settings.ApiUser,
                 ApiKey = settings.ApiKey,
-                PrepublishCheckEnabled = _siteimproveHelper.GetPrepublishCheckEnabled(settings.ApiUser, settings.ApiKey)
+                PrepublishCheckEnabled = _siteimproveHelper.GetPrepublishCheckEnabled(settings.ApiUser, settings.ApiKey),
+                PrepublishError = prepublishError
             };
 
             return View(vm);
@@ -60,10 +61,16 @@ namespace SiteImprove.Optimizely.Plugin.Controllers
         public ActionResult EnablePrepublishCheck(bool enablePrepublishCheck = false)
         {
             var settings = _settingsRepo.GetSetting();
+            var success = true;
 
             if (enablePrepublishCheck)
             {
-                _siteimproveHelper.EnablePrepublishCheck(settings.ApiUser, settings.ApiKey);
+                success = _siteimproveHelper.EnablePrepublishCheck(settings.ApiUser, settings.ApiKey);
+            }
+
+            if (!success)
+            {
+                return RedirectToAction("Index", new { prepublishError = true });
             }
 
             return RedirectToAction("Index");
