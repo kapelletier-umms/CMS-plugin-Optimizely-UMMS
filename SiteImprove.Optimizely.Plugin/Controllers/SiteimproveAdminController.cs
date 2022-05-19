@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SiteImprove.Optimizely.Plugin.Helper;
 using SiteImprove.Optimizely.Plugin.Models;
@@ -38,21 +40,31 @@ namespace SiteImprove.Optimizely.Plugin.Controllers
                 ApiUser = settings.ApiUser,
                 ApiKey = settings.ApiKey,
                 PrepublishCheckEnabled = _siteimproveHelper.GetPrepublishCheckEnabled(settings.ApiUser, settings.ApiKey),
-                PrepublishError = prepublishError
+                PrepublishError = prepublishError,
+                UrlMap = settings.UrlMap
             };
 
             return View(vm);
         }
 
         [HttpPost]
-        public ActionResult Save(bool recheck, string apiUser, string apiKey)
+        public ActionResult Save(bool recheck, string apiUser, string apiKey, IEnumerable<KeyValuePair<string, string>> urlMap)
         {
             var settings = this._settingsRepo.GetSetting();
             settings.Recheck = recheck;
             settings.ApiUser = apiUser;
             settings.ApiKey = apiKey;
 
-            _settingsRepo.SaveToken(settings.Token, settings.Recheck, settings.ApiUser, settings.ApiKey);
+            settings.UrlMap = new Dictionary<string, string>();
+            foreach (var pair in urlMap)
+            {
+                if (!string.IsNullOrWhiteSpace(pair.Key))
+                {
+                    settings.UrlMap.TryAdd(pair.Key, pair.Value);
+                }
+            }
+
+            _settingsRepo.SaveToken(settings.Token, settings.Recheck, settings.ApiUser, settings.ApiKey, settings.UrlMap);
 
             return RedirectToAction("Index");
         }

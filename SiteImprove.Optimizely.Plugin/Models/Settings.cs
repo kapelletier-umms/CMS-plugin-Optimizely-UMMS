@@ -1,4 +1,5 @@
-﻿using EPiServer.Data;
+﻿using System.Collections.Generic;
+using EPiServer.Data;
 using EPiServer.Data.Dynamic;
 
 namespace SiteImprove.Optimizely.Plugin.Models
@@ -15,5 +16,7 @@ namespace SiteImprove.Optimizely.Plugin.Models
         public string ApiUser { get; set; }
 
         public string ApiKey { get; set; }
+
+        public Dictionary<string,string> UrlMap { get; set; }
     }
 }

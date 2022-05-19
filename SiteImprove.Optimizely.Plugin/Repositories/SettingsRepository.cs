@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using EPiServer.Data;
 using EPiServer.Data.Dynamic;
 using EPiServer.ServiceLocation;
@@ -34,7 +35,7 @@ namespace SiteImprove.Optimizely.Plugin.Repositories
             return settings.Token;
         }
 
-        public void SaveToken(string token, bool recheck = false, string apiUser = null, string apiKey = null)
+        public void SaveToken(string token, bool recheck = false, string apiUser = null, string apiKey = null, Dictionary<string, string> urlMap = null)
         {
             var current = SettingStore.LoadAll<Settings>().ToArray().FirstOrDefault();
             if (current != null)
@@ -43,6 +44,7 @@ namespace SiteImprove.Optimizely.Plugin.Repositories
                 current.Recheck = recheck;
                 current.ApiUser = apiUser;
                 current.ApiKey = apiKey;
+                current.UrlMap = urlMap;
                 SettingStore.Save(current, current.GetIdentity());
                 return;
             }
