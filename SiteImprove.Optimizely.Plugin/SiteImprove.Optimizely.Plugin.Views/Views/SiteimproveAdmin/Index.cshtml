@@ -124,28 +124,33 @@
                                         <div class="epi-uif-data-table__table mdc-data-table" header="Host Names">
                                             <table class="epi-uif-data-table-content mdc-data-table__table">
                                                 <thead class="epi-uif-data-table-header-row rmwc-data-table__head">
-                                                <tr class="rmwc-data-table__row mdc-data-table__header-row">
-                                                    <th class="epi-uif-data-table-column-header-cell rmwc-data-table__cell mdc-data-table__header-cell" role="columnheader" scope="col">Domain</th>
-                                                    <th class="epi-uif-data-table-column-header-cell rmwc-data-table__cell mdc-data-table__header-cell" role="columnheader" scope="col">External Url</th>
-                                                </tr>
+                                                    <tr class="rmwc-data-table__row mdc-data-table__header-row">
+                                                        <th class="epi-uif-data-table-column-header-cell rmwc-data-table__cell mdc-data-table__header-cell" role="columnheader" scope="col">Site Url</th>
+                                                        <th class="epi-uif-data-table-column-header-cell rmwc-data-table__cell mdc-data-table__header-cell" role="columnheader" scope="col">External Url</th>
+                                                    </tr>
                                                 </thead>
                                                 <tbody class="epi-uif-data-table-body mdc-data-table__content">
-                                                @if (Model.UrlMap != null)
-                                                {
-                                                    @foreach (var (pair, index) in Model.UrlMap.Select((pair, index) => (pair, index)))
+                                                    @if (Model.UrlMap != null)
                                                     {
-                                                        <tr class="epi-uif-data-table-row rmwc-data-table__row mdc-data-table__row">
-                                                            <td class="epi-uif-data-table-cell mdc-data-table__cell rmwc-data-table__cell">@Html.TextBox("urlMap[" + index + "].key", pair.Key)</td>
-                                                            <td class="epi-uif-data-table-cell mdc-data-table__cell rmwc-data-table__cell">@Html.TextBox("urlMap[" + index + "].value", pair.Value)</td>
-                                                        </tr>
+                                                        @foreach (var (pair, index) in Model.UrlMap.Select((pair, index) => (pair, index)))
+                                                        {
+                                                            <tr class="epi-uif-data-table-row rmwc-data-table__row mdc-data-table__row">
+                                                                <td class="epi-uif-data-table-cell mdc-data-table__cell rmwc-data-table__cell">@Html.TextBox("urlMap[" + index + "].key", pair.Key)</td>
+                                                                <td class="epi-uif-data-table-cell mdc-data-table__cell rmwc-data-table__cell">@Html.TextBox("urlMap[" + index + "].value", pair.Value)</td>
+                                                            </tr>
+                                                        }
                                                     }
-                                                }
-                                                <tr class="epi-uif-data-table-row rmwc-data-table__row mdc-data-table__row">
-                                                    <td class="epi-uif-data-table-cell mdc-data-table__cell rmwc-data-table__cell">@Html.TextBox("urlMap[" + (Model.UrlMap?.Count() ?? 0) + "].key", "")</td>
-                                                    <td class="epi-uif-data-table-cell mdc-data-table__cell rmwc-data-table__cell">@Html.TextBox("urlMap[" + (Model.UrlMap?.Count() ?? 0) + "].value", "")</td>
-                                                </tr>
+                                                    <tr class="epi-uif-data-table-row rmwc-data-table__row mdc-data-table__row">
+                                                        <td class="epi-uif-data-table-cell mdc-data-table__cell rmwc-data-table__cell">@Html.TextBox("urlMap[" + (Model.UrlMap?.Count() ?? 0) + "].key", "")</td>
+                                                        <td class="epi-uif-data-table-cell mdc-data-table__cell rmwc-data-table__cell">@Html.TextBox("urlMap[" + (Model.UrlMap?.Count() ?? 0) + "].value", "")</td>
+                                                    </tr>
                                                 </tbody>
                                             </table>
+                                        </div>
+                                    </div>
+                                    <div style=" padding-left: 9px;">
+                                        <div class="epi-uif-checkbox mdc-form-field">
+                                            <span class="epi-uif-typography mdc-typography--body1" style=" color: rgba(8, 7, 54, 0.6); ">Enter full site URLs including scheme (<i>https://www.example.com</i>)</span>
                                         </div>
                                     </div>
                                 </div>

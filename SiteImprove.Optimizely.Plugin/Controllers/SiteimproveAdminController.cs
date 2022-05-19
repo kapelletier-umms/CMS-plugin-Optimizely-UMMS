@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using EPiServer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SiteImprove.Optimizely.Plugin.Helper;
@@ -58,7 +60,8 @@ namespace SiteImprove.Optimizely.Plugin.Controllers
             settings.UrlMap = new Dictionary<string, string>();
             foreach (var pair in urlMap)
             {
-                if (!string.IsNullOrWhiteSpace(pair.Key))
+                if (Uri.TryCreate(pair.Key, UriKind.Absolute, out Uri _) &&
+                    Uri.TryCreate(pair.Value, UriKind.Absolute, out Uri _))
                 {
                     settings.UrlMap.TryAdd(pair.Key, pair.Value);
                 }
