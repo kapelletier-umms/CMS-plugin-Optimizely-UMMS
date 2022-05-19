@@ -10,6 +10,7 @@ using EPiServer.ServiceLocation;
 using EPiServer.Web;
 using EPiServer.Web.Routing;
 using Newtonsoft.Json;
+using SiteImprove.Optimizely.Plugin.Repositories;
 
 namespace SiteImprove.Optimizely.Plugin.Helper
 {
@@ -17,6 +18,13 @@ namespace SiteImprove.Optimizely.Plugin.Helper
     public class SiteimproveHelper : ISiteimproveHelper
     {
         private static readonly ILogger _log = LogManager.GetLogger(typeof(SiteimproveHelper));
+
+        private readonly ISettingsRepository _settingsRepo;
+
+        public SiteimproveHelper(ISettingsRepository settingsRepository)
+        {
+            _settingsRepo = settingsRepository;
+        }
 
         public string GetVersion()
         {
@@ -44,6 +52,28 @@ namespace SiteImprove.Optimizely.Plugin.Helper
                 }
 
                 var siteUrl = site.SiteUrl;
+
+                var settings = _settingsRepo.GetSetting();
+                if(settings.UrlMap != null)
+                {
+                    foreach (var pair in settings.UrlMap)
+                    {
+                        if(Uri.TryCreate(pair.Key, UriKind.Absolute, out Uri settingsSiteUrl))
+                        {
+                            if (settingsSiteUrl.Host == siteUrl.Host &&
+                                settingsSiteUrl.Port == siteUrl.Port &&
+                                settingsSiteUrl.Scheme == siteUrl.Scheme)
+                            {
+                                if(Uri.TryCreate(pair.Value, UriKind.Absolute, out Uri externalUrl))
+                                {
+                                    siteUrl = externalUrl;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+
                 var uriBuilder = new UrlBuilder(internalUrl)
                 {
                     Host = siteUrl.Host,

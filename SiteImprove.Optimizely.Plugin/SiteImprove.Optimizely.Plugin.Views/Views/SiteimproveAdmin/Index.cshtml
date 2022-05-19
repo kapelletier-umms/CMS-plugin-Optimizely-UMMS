@@ -135,14 +135,14 @@
                                                         @foreach (var (pair, index) in Model.UrlMap.Select((pair, index) => (pair, index)))
                                                         {
                                                             <tr class="epi-uif-data-table-row rmwc-data-table__row mdc-data-table__row">
-                                                                <td class="epi-uif-data-table-cell mdc-data-table__cell rmwc-data-table__cell">@Html.TextBox("urlMap[" + index + "].key", pair.Key)</td>
-                                                                <td class="epi-uif-data-table-cell mdc-data-table__cell rmwc-data-table__cell">@Html.TextBox("urlMap[" + index + "].value", pair.Value)</td>
+                                                                <td class="epi-uif-data-table-cell mdc-data-table__cell rmwc-data-table__cell">@Html.TextBox("urlMap[" + index + "].key", pair.Key, new { style="width:100%" })</td>
+                                                                <td class="epi-uif-data-table-cell mdc-data-table__cell rmwc-data-table__cell">@Html.TextBox("urlMap[" + index + "].value", pair.Value, new { style = "width:100%" })</td>
                                                             </tr>
                                                         }
                                                     }
                                                     <tr class="epi-uif-data-table-row rmwc-data-table__row mdc-data-table__row">
-                                                        <td class="epi-uif-data-table-cell mdc-data-table__cell rmwc-data-table__cell">@Html.TextBox("urlMap[" + (Model.UrlMap?.Count() ?? 0) + "].key", "")</td>
-                                                        <td class="epi-uif-data-table-cell mdc-data-table__cell rmwc-data-table__cell">@Html.TextBox("urlMap[" + (Model.UrlMap?.Count() ?? 0) + "].value", "")</td>
+                                                        <td class="epi-uif-data-table-cell mdc-data-table__cell rmwc-data-table__cell">@Html.TextBox("urlMap[" + (Model.UrlMap?.Count() ?? 0) + "].key", "", new { style = "width:100%" })</td>
+                                                        <td class="epi-uif-data-table-cell mdc-data-table__cell rmwc-data-table__cell">@Html.TextBox("urlMap[" + (Model.UrlMap?.Count() ?? 0) + "].value", "", new { style = "width:100%" })</td>
                                                     </tr>
                                                 </tbody>
                                             </table>
