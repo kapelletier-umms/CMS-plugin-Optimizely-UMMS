@@ -1,0 +1,4 @@
+This is the release log for the Optimizely plugin:
+
+Format:
+Date / Plugin Version / Changes made since last version 
