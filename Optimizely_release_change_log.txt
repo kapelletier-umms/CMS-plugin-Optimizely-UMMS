@@ -2,3 +2,5 @@ This is the release log for the Optimizely plugin:
 
 Format:
 Date / Plugin Version / Changes made since last version 
+
+2022-09-02 / 4.1.1 / Prepublish error handling and domain mapping
