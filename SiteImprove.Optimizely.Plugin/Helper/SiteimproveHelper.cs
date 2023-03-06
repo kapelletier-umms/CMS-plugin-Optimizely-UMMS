@@ -98,16 +98,23 @@ namespace SiteImprove.Optimizely.Plugin.Helper
                 var byteArray = Encoding.ASCII.GetBytes($"{apiUser}:{apiKey}");
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
+                var content = "";
                 try
                 {
                     var response = client.GetAsync($"{Constants.SiteImproveApiUrl}/settings/content_checking").Result;
-                    var content = response.Content.ReadAsStringAsync().Result;
-                    enabled = JsonConvert.DeserializeObject<dynamic>(content)["is_ready"];
+                    if(response.IsSuccessStatusCode)
+                    {
+                        content = response.Content.ReadAsStringAsync().Result;
+                        enabled = JsonConvert.DeserializeObject<dynamic>(content)["is_ready"];
+                    } 
+                    else
+                    {
+                        _log.Error($"Could not get prepublish check status. Returned status: {response.StatusCode} and reason: {response.ReasonPhrase}");
+                    }
                 }
                 catch (Exception ex)
                 {
-                    _log.Error("Could not get prepublish check status.", ex);
+                    _log.Error($"Could not get prepublish check status. From {content}", ex);
                 }
 
                 return enabled;
@@ -128,6 +135,7 @@ namespace SiteImprove.Optimizely.Plugin.Helper
 
                     if(!response.IsSuccessStatusCode)
                     {
+                        _log.Error($"Could not enable prepublish check. Returned status: {response.StatusCode} and reason: {response.ReasonPhrase}");
                         return false;
                     }
                 }
