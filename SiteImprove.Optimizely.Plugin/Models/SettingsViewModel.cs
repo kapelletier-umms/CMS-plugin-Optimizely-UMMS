@@ -17,5 +17,9 @@ namespace SiteImprove.Optimizely.Plugin.Models
         public bool PrepublishError { get; set; }
 
         public IDictionary<string, string> UrlMap { get; set; }
+
+        public string PluginVersion { get; set; }
+
+        public string PluginUrl { get; set; }
     }
 }

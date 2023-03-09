@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using EPiServer;
+using EPiServer.Framework.Modules;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SiteImprove.Optimizely.Plugin.Helper;
@@ -15,11 +14,13 @@ namespace SiteImprove.Optimizely.Plugin.Controllers
     {
         private readonly ISettingsRepository _settingsRepo;
         private readonly ISiteimproveHelper _siteimproveHelper;
+        private readonly IModuleResourceResolver _moduleResourceResolver;
 
-        public SiteimproveAdminController(ISettingsRepository settingsRepo, ISiteimproveHelper siteimproveHelper)
+        public SiteimproveAdminController(ISettingsRepository settingsRepo, ISiteimproveHelper siteimproveHelper, IModuleResourceResolver moduleResourceResolver)
         {
             _settingsRepo = settingsRepo;
             _siteimproveHelper = siteimproveHelper;
+            _moduleResourceResolver = moduleResourceResolver;
             Title = "SiteImprove";
         }
 
@@ -43,7 +44,9 @@ namespace SiteImprove.Optimizely.Plugin.Controllers
                 ApiKey = settings.ApiKey,
                 PrepublishCheckEnabled = _siteimproveHelper.GetPrepublishCheckEnabled(settings.ApiUser, settings.ApiKey),
                 PrepublishError = prepublishError,
-                UrlMap = settings.UrlMap
+                UrlMap = settings.UrlMap,
+                PluginVersion = _siteimproveHelper.GetSiteimprovePluginVersion(),
+                PluginUrl = _moduleResourceResolver.ResolvePath(Constants.SiteImproveModuleName, "SiteimproveAdmin"),
             };
 
             return View(vm);

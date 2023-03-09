@@ -4,7 +4,8 @@ namespace SiteImprove.Optimizely.Plugin.Helper
 {
     public interface ISiteimproveHelper
     {
-        string GetVersion();
+        string GetOptimizelyVersion();
+        string GetSiteimprovePluginVersion();
         string RequestToken();
         void PassEvent(string type, string url, string token);
         string GetExternalUrl(PageData page);

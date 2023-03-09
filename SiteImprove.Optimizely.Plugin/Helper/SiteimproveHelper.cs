@@ -26,11 +26,18 @@ namespace SiteImprove.Optimizely.Plugin.Helper
             _settingsRepo = settingsRepository;
         }
 
-        public string GetVersion()
+        public string GetOptimizelyVersion()
         {
             var optimizelyAssembly = Assembly.GetAssembly(typeof(EPiServer.Core.Licensing));
             var version = optimizelyAssembly.GetName().Version;
             return version.ToString();
+        }
+
+        public string GetSiteimprovePluginVersion()
+        {
+            var optimizelyAssembly = Assembly.GetAssembly(typeof(SiteimproveHelper));
+            var version = optimizelyAssembly.GetName().Version;
+            return version.ToString(3);
         }
 
         public string GetExternalUrl(PageData page)
@@ -157,7 +164,7 @@ namespace SiteImprove.Optimizely.Plugin.Helper
                 using (var client = new HttpClient())
                 {
                     // Request a token from Siteimprove
-                    var version = GetVersion();
+                    var version = GetOptimizelyVersion();
                     string data = client.GetStringAsync(string.Format("{0}?cms=Optimizely {1}", Constants.SiteImproveTokenUrl, version)).Result;
                     response = JsonConvert.DeserializeObject<dynamic>(data)["token"];
                 }
