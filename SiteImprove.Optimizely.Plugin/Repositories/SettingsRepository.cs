@@ -35,13 +35,14 @@ namespace SiteImprove.Optimizely.Plugin.Repositories
             return settings.Token;
         }
 
-        public void SaveToken(string token, bool recheck = false, string apiUser = null, string apiKey = null, Dictionary<string, string> urlMap = null)
+        public void SaveToken(string token, bool recheck = false, bool latestUI = true, string apiUser = null, string apiKey = null, Dictionary<string, string> urlMap = null)
         {
             var current = SettingStore.LoadAll<Settings>().ToArray().FirstOrDefault();
             if (current != null)
             {
                 current.Token = token;
                 current.Recheck = recheck;
+                current.LatestUI = latestUI;
                 current.ApiUser = apiUser;
                 current.ApiKey = apiKey;
                 current.UrlMap = urlMap;
@@ -49,7 +50,7 @@ namespace SiteImprove.Optimizely.Plugin.Repositories
                 return;
             }
 
-            SettingStore.Save(new Settings { Token = token, Recheck = recheck, ApiUser = apiUser, ApiKey = apiKey });
+            SettingStore.Save(new Settings { Token = token, Recheck = recheck, LatestUI = latestUI, ApiUser = apiUser, ApiKey = apiKey });
         }
 
         public Settings GetSetting()

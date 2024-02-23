@@ -13,6 +13,8 @@ namespace SiteImprove.Optimizely.Plugin.Models
 
         public bool Recheck { get; set; }
 
+        public bool LatestUI { get; set; }
+
         public string ApiUser { get; set; }
 
         public string ApiKey { get; set; }

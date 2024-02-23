@@ -33,13 +33,14 @@ namespace SiteImprove.Optimizely.Plugin.Controllers
             if (newToken)
             {
                 settings.Token = _siteimproveHelper.RequestToken();
-                _settingsRepo.SaveToken(settings.Token, settings.Recheck, settings.ApiUser, settings.ApiKey);
+                _settingsRepo.SaveToken(settings.Token, settings.Recheck, settings.LatestUI, settings.ApiUser, settings.ApiKey);
             }
 
             var vm = new SettingsViewModel()
             {
                 Token = settings.Token,
                 Recheck = settings.Recheck,
+                LatestUI = settings.LatestUI,
                 ApiUser = settings.ApiUser,
                 ApiKey = settings.ApiKey,
                 PrepublishCheckEnabled = _siteimproveHelper.GetPrepublishCheckEnabled(settings.ApiUser, settings.ApiKey),
@@ -53,10 +54,11 @@ namespace SiteImprove.Optimizely.Plugin.Controllers
         }
 
         [HttpPost]
-        public ActionResult Save(bool recheck, string apiUser, string apiKey, IEnumerable<KeyValuePair<string, string>> urlMap)
+        public ActionResult Save(bool recheck, bool latestUI, string apiUser, string apiKey, IEnumerable<KeyValuePair<string, string>> urlMap)
         {
             var settings = this._settingsRepo.GetSetting();
             settings.Recheck = recheck;
+            settings.LatestUI = latestUI;
             settings.ApiUser = apiUser;
             settings.ApiKey = apiKey;
 
@@ -70,7 +72,7 @@ namespace SiteImprove.Optimizely.Plugin.Controllers
                 }
             }
 
-            _settingsRepo.SaveToken(settings.Token, settings.Recheck, settings.ApiUser, settings.ApiKey, settings.UrlMap);
+            _settingsRepo.SaveToken(settings.Token, settings.Recheck, settings.LatestUI, settings.ApiUser, settings.ApiKey, settings.UrlMap);
 
             return RedirectToAction("Index");
         }
