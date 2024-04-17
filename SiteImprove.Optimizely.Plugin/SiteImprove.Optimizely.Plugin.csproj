@@ -4,14 +4,14 @@
     <TargetFramework>net5.0</TargetFramework>
     <IsPackable>true</IsPackable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Copyright>Copyright © SiteImprove 2023</Copyright>
+    <Copyright>Copyright © SiteImprove 2024</Copyright>
     <Company>SiteImprove</Company>
     <Authors>SiteImprove</Authors>
     <PackageTags>SiteImprove SEO</PackageTags>
     <PackageProjectUrl>https://github.com/Siteimprove/CMS-plugin-Optimizely</PackageProjectUrl>
     <PackageIcon>icon.png</PackageIcon>
     <Description>Optimizely plugin from SiteImprove</Description>
-    <Version>4.3.0-rc24</Version>
+    <Version>4.3.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
