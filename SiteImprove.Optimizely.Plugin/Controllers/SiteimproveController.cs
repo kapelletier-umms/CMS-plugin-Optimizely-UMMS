@@ -38,6 +38,20 @@ namespace SiteImprove.Optimizely.Plugin.Controllers
             return true;
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        public bool IsEditorAuthorized()
+        {
+            IPrincipal user = HttpContext.User;
+            if (user == null || user.Identity == null || !user.Identity.IsAuthenticated)
+            {
+                Response.StatusCode = (int)HttpStatusCode.Forbidden;
+                return false;
+            }
+
+            return true;
+        }
+
         public JsonResult Token()
         {
             return Json(_settingsRepo.GetToken());

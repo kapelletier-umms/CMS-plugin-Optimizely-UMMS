@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <IsPackable>true</IsPackable>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Copyright>Copyright © SiteImprove 2023</Copyright>
+    <Company>SiteImprove</Company>
+    <Authors>SiteImprove</Authors>
+    <PackageTags>SiteImprove SEO</PackageTags>
+    <PackageProjectUrl>https://github.com/Siteimprove/CMS-plugin-Optimizely</PackageProjectUrl>
+    <PackageIcon>icon.png</PackageIcon>
+    <Description>UMass Chan Optimizely plugin from SiteImprove</Description>
+    <Version>4.3.1</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="images\icon.png" Pack="true" PackagePath="\" />
+    <None Include="SiteImprove.Optimizely.Plugin.targets" Pack="true" PackagePath="\build\net8.0\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EPiServer.CMS.UI.Core" Version="12.29.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="modules\_protected\SiteImprove.Optimizely.Plugin\SiteImprove.Optimizely.Plugin.zip">
+    <PackageCopyToOutput>true</PackageCopyToOutput>
+	</Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="modules\_protected\SiteImprove.Optimizely.Plugin_files\**\*" />
+  </ItemGroup> 
+
+  <Target Name="ZipPluginContent" AfterTargets="BeforeBuild">
+    <Message Text="Zipping module" />
+    <ZipDirectory Overwrite="true" SourceDirectory="modules\_protected\SiteImprove.Optimizely.Plugin_files" DestinationFile="modules\_protected\SiteImprove.Optimizely.Plugin\SiteImprove.Optimizely.Plugin.zip" />
+  </Target>
+
+</Project>
